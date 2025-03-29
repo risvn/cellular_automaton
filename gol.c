@@ -29,12 +29,12 @@ int draw_grid(SDL_Surface* surface,int n_rows,int n_columns){
            }
 }
 
-void draw_matrix(SDL_Surface* surface,int n_rows,int n_columns,int* game_matrix){
+void draw_matrix(SDL_Surface* surface,int n_rows,int n_columns,int game_matrix []){
 
     for(int i=0;i<n_rows;i++){
 
         for(int j=0;j<n_columns;j++){
-           int cell_value=*(game_matrix+ i*n_columns +j);
+           int cell_value=game_matrix[j+i*n_columns];
             draw_cell(surface,j,i,cell_value);
           }
 
@@ -42,11 +42,11 @@ void draw_matrix(SDL_Surface* surface,int n_rows,int n_columns,int* game_matrix)
 
 }
 
-void init_game_matrix(int n_rows,int n_columns,int* game_matrix){
+void init_game_matrix(int n_rows,int n_columns,int game_matrix []){
     for(int i=0;i<n_rows;i++){
 
         for(int j=0;j<n_columns;j++){
-           *(game_matrix+i*n_columns+j)= rand()%2;  
+           game_matrix[j+i*n_columns]= rand()%2;  
 
           }
 
@@ -78,9 +78,9 @@ int main(){
 
 
 
-    int game_matrix [n_rows][n_columns];
-    init_game_matrix(n_rows,n_columns,game_matrix[0]);
-    draw_matrix(surface,n_rows,n_columns,game_matrix[0]);
+    int game_matrix [n_rows * n_columns];
+    init_game_matrix(n_rows,n_columns,game_matrix);
+    draw_matrix(surface,n_rows,n_columns,game_matrix);
 
 
     draw_grid(surface,n_rows,n_columns);
