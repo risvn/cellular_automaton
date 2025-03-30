@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<SDL2/SDL.h>
+#include<stdlib.h>
 
 Uint32 WHITE_COLOUR=0xffffffff;
 Uint32 BLACK_COLOUR=0x00000000;
@@ -44,7 +45,6 @@ void draw_matrix(SDL_Surface* surface,int n_rows,int n_columns,int game_matrix [
 
 void init_game_matrix(int n_rows,int n_columns,int game_matrix []){
     for(int i=0;i<n_rows;i++){
-
         for(int j=0;j<n_columns;j++){
            game_matrix[j+i*n_columns]= rand()%2;  
 
@@ -53,8 +53,68 @@ void init_game_matrix(int n_rows,int n_columns,int game_matrix []){
       }
  }
 
+//logic for finding n_neigbors:
+int count_neighbors(int i,int j,int n_rows,int n_columns,int game_matrix []){
+    int n_neighbour=0;
+    //left neg:
+    if(j>0)
+        n_neighbour+=game_matrix[j-1+i*n_columns];
+    //right neg:
+    if(j<n_columns-1)
+        n_neighbour+=game_matrix[j+1+i*n_columns];
+    //top neg:
+    if(i>0)
+        n_neighbour+=game_matrix[j+(i-1)*n_columns];
+    //bottom neg:
+    if(j<n_rows-1)
+        n_neighbour+=game_matrix[j+(i+1)*n_columns];
+    //top lef neg:   
+    if(j>0&&i>0)
+        n_neighbour+=game_matrix[j-1+(i+1)*n_columns];
+    //top right neg:
+    if(j<n_columns-1&&i>0)
+       n_neighbour+=game_matrix[j+1+(i+1)*n_columns];
+    //bott lef neg:   
+    if(j>0&&i<n_rows-1)
+         n_neighbour+=game_matrix[j-1+(i-1)*n_columns];
+    //bott right neg:
+    if(j<(n_columns-1)&&i<n_rows-1)
+        n_neighbour+=game_matrix[j+1+(i-1)*n_columns];
+       
+    return n_neighbour;
 
 
+}
+
+//simulation for game:
+void simulation(int n_rows,int n_columns,int game_matrix []){
+    for(int i=0;i<n_rows;i++){
+        for(int j=0;j<n_columns;j++){
+           game_matrix[j+i*n_columns];
+            int n_neighbors=count_neighbors(i,j,n_rows,n_columns,game_matrix);
+            int current_cell_val=game_matrix[j+i*n_columns];
+           //--conways game of life 4 rules-- 
+            //rule 1:
+            if(n_neighbors<2)
+                game_matrix[j+i*n_columns]=0;
+            //rule 2:
+            if (current_cell_val!=0 && (n_neighbors==2||n_neighbors==3))
+                continue;
+            //rule 3:
+            if (current_cell_val!=0 && n_neighbors > 3)
+                game_matrix[j+i*n_columns]=0;
+           //rule 4:
+            if (current_cell_val==0 && n_neighbors==3)
+                game_matrix[j+i*n_columns]=1;
+
+          }
+
+      }
+
+
+
+
+}
 
 
 
@@ -69,23 +129,21 @@ int main(){
 
     SDL_Window* window = SDL_CreateWindow(title,SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,SURFACE_WIDTH,SURFACE_HEIGHT,0);
     SDL_Surface* surface= SDL_GetWindowSurface(window);
-
-
-
-
-
-
-
-
-
     int game_matrix [n_rows * n_columns];
-    init_game_matrix(n_rows,n_columns,game_matrix);
+
+    init_game_matrix(n_rows,n_columns,game_matrix);    
+    SDL_Event event;
+    int ongoing_simulation=1;
+    while(ongoing_simulation){
+        while(SDL_PollEvent(&event)){
+                if(event.type==SDL_QUIT){ongoing_simulation=0;}
+        }
+    simulation(n_rows,n_columns,game_matrix);    
     draw_matrix(surface,n_rows,n_columns,game_matrix);
-
-
     draw_grid(surface,n_rows,n_columns);
     SDL_UpdateWindowSurface(window);
-    SDL_Delay(5000);
+    SDL_Delay(100);
+    }
 }
 
 
