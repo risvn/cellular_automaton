@@ -1,13 +1,15 @@
 #include<stdio.h>
 #include<SDL2/SDL.h>
 #include<stdlib.h>
+#include<time.h>
+
 
 Uint32 WHITE_COLOUR=0xffffffff;
 Uint32 BLACK_COLOUR=0x00000000;
 Uint32 GREY_COLOUR=0x2f2f2f2f;
 int SURFACE_WIDTH=900;
 int SURFACE_HEIGHT=600;
-int CELL_WIDTH=25;
+int CELL_WIDTH=10;
 int LINE_WIDTH=1;
 
 int draw_cell(SDL_Surface* surface,int cell_x,int cell_y,int cell_value){
@@ -46,7 +48,7 @@ void draw_matrix(SDL_Surface* surface,int n_rows,int n_columns,int game_matrix [
 void init_game_matrix(int n_rows,int n_columns,int game_matrix []){
     for(int i=0;i<n_rows;i++){
         for(int j=0;j<n_columns;j++){
-           game_matrix[j+i*n_columns]= rand()%2;  
+           game_matrix[j+i*n_columns]= rand() > RAND_MAX * 9.0/10.0 ;  
 
           }
 
@@ -88,6 +90,7 @@ int count_neighbors(int i,int j,int n_rows,int n_columns,int game_matrix []){
 
 //simulation for game:
 void simulation(int n_rows,int n_columns,int game_matrix []){
+    int new_game_matrix [n_rows*n_columns];
     for(int i=0;i<n_rows;i++){
         for(int j=0;j<n_columns;j++){
            game_matrix[j+i*n_columns];
@@ -95,23 +98,26 @@ void simulation(int n_rows,int n_columns,int game_matrix []){
             int current_cell_val=game_matrix[j+i*n_columns];
            //--conways game of life 4 rules-- 
             //rule 1:
-            if(n_neighbors<2)
-                game_matrix[j+i*n_columns]=0;
+            if(current_cell_val!=0 && n_neighbors<2)
+                new_game_matrix[j+i*n_columns]=0;
             //rule 2:
-            if (current_cell_val!=0 && (n_neighbors==2||n_neighbors==3))
-                continue;
+            else if (current_cell_val!=0 && (n_neighbors==2||n_neighbors==3))
+                new_game_matrix[j+i*n_columns]=1;             
             //rule 3:
-            if (current_cell_val!=0 && n_neighbors > 3)
-                game_matrix[j+i*n_columns]=0;
+            else if (current_cell_val!=0 && n_neighbors > 3)
+                new_game_matrix[j+i*n_columns]=0;
            //rule 4:
-            if (current_cell_val==0 && n_neighbors==3)
-                game_matrix[j+i*n_columns]=1;
+            else if (current_cell_val==0 && n_neighbors==3)
+                new_game_matrix[j+i*n_columns]=1;
+            else 
+                new_game_matrix[j+i*n_columns]=current_cell_val;
 
           }
 
       }
 
-
+    for(int i=0;i<n_rows*n_columns;i++)
+    game_matrix[i]=new_game_matrix[i];
 
 
 }
@@ -121,6 +127,9 @@ void simulation(int n_rows,int n_columns,int game_matrix []){
 
 int main(){
     printf("conways_game_of_life..\n");
+    //seeding the random number generator
+    srand(time(NULL));
+
     SDL_Init(SDL_INIT_VIDEO);
     char* title ="Conway Game Of LIfe\n";
 
