@@ -1,4 +1,5 @@
-this project is only for learning purpose i dont own any code
-i had complete fun while coding and deep understanding logic while the implementation
-i used sdl2 library for graphics
-credtis : https://www.youtube.com/@HirschDaniel (for guiding this project)
+This project was created purely for learning purposes, and I do not claim ownership of any code. The journey of coding and implementing the logic was both enjoyable and insightful, deepening my understanding of the concepts involved.
+
+For graphics, I utilized the SDL2 library.
+
+Credits: Special thanks to Hirsch Daniel for guiding this project.
