@@ -2,4 +2,4 @@ This project was created purely for learning purposes, and I do not claim owners
 
 For graphics, I utilized the SDL2 library.
 
-Credits: Special thanks to Hirsch Daniel for guiding this project.
+Credits: Special thanks to Hirsch Daniel(https://www.youtube.com/@HirschDaniel) for guiding this project.
