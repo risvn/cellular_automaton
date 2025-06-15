@@ -50,10 +50,16 @@ It has inspired work in computer science, physics, biology, and art.
 How to run:
 ------------------------  
 1️⃣ Make sure you have SDL2 installed on your system.
-   this program only runs on linux os
 2️⃣ Compile the program (if not already done):
+NOTE: this program only run on linux os
 
+clone the repo:
+```bash
+git clone https://github.com/risvn/cellular_automaton.git
+cd cellular_automaton/conways_game_of_life
+```
 
+run:
 ```bash
 make run
 ```
